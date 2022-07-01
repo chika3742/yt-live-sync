@@ -1,0 +1,19 @@
+{
+  "manifest_version": 2,
+  "name": "YouTube Live Sync",
+  "version": "1.0",
+  "description": "YouTubeのライブ配信の時刻表示と、実時間での動画の同期を行います。",
+  "content_scripts": [
+    {
+      "matches": ["https://www.youtube.com/*"],
+      "js": ["build/bundle.js"]
+    }
+  ],
+  "permissions": [
+    "<all_urls>",
+    "tabs"
+  ],
+  "background": {
+    "scripts": ["src/background.js"]
+  }
+}
