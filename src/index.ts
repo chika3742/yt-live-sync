@@ -24,7 +24,11 @@ import moment = require("moment")
   }, 500)
 })()
 
+let seekbarObserver: MutationObserver | undefined
+
 async function register() {
+  seekbarObserver?.disconnect()
+
   const search = new URLSearchParams(location.search)
   if (search.has("v")) {
     try {
@@ -32,28 +36,30 @@ async function register() {
 
       if (result.data.exists && result.data.liveStreamingDetails.actualStartTime) {
         const startTime = result.data.liveStreamingDetails.actualStartTime
-        const startDate = moment(startTime)
 
         const player = document.getElementsByClassName("video-stream html5-main-video")[0] as HTMLVideoElement
 
         player.ontimeupdate = () => {
-          const actualDate = startDate.clone()
+          const actualDate = moment(startTime)
           actualDate.add(player.currentTime, "seconds")
           updateDisplay(actualDate)
         }
 
         const sliderTooltipElement = document.getElementsByClassName("ytp-tooltip-text")[0];
-        const observer = new MutationObserver((mutations, _) => {
+        seekbarObserver = new MutationObserver((mutations, _) => {
           const elements = sliderTooltipElement!.textContent!.split(":");
           if (elements.length >= 2 && !sliderTooltipElement!.textContent!.includes("(")) {
-            const actualDate = startDate.clone()
             let colonTime = sliderTooltipElement!.textContent!.split(" ")[0];
-
-            actualDate.add(colonTime)
+            const actualDate = colonTime.startsWith("-") ? moment() : moment(startTime)
+            let timeParts = colonTime.replace("-", "").split(":")
+            if (timeParts.length === 2) {
+              timeParts = ["0", ...timeParts]
+            }
+            actualDate.add((colonTime.startsWith("-") ? "-" : "") + timeParts.join(":"))
             sliderTooltipElement.textContent = `${elements.join(":")} (${actualDate.format("M/D H:mm:ss")})`
           }
         })
-        observer.observe(sliderTooltipElement, {
+        seekbarObserver.observe(sliderTooltipElement, {
           characterData: true,
           childList: true,
           subtree: true
