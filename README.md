@@ -10,6 +10,6 @@ Firefox向け。YouTubeのライブ配信・プレミア公開の配信時の実
 
 ## Firefoxへの適用方法
 
-1. [about:debugging#/runtime/this-firefox](about:debugging#/runtime/this-firefox)を開きます。
+1. Firefoxで`about:debugging#/runtime/this-firefox`を開きます。
 2. 「一時的なアドオンを読み込む」をクリックします。
 3. manifest.jsonなど適当なファイルを選択します。
