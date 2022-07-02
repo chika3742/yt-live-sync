@@ -64,6 +64,8 @@ async function register() {
           childList: true,
           subtree: true
         })
+      } else {
+        (document.querySelector(".yt-live-sync-actual-time") as HTMLSpanElement).style.display = "none"
       }
     } catch (e) {
       console.error(e)
@@ -79,6 +81,7 @@ function updateDisplay(actualDate: Moment) {
     span.className = "yt-live-sync-actual-time"
     display?.appendChild(span)
   }
+  span.style.display = "unset"
   span.style.marginLeft = "8px"
   span.style.opacity = "0.8"
   span.textContent = `(${actualDate.format("M/D H:mm:ss")})`
