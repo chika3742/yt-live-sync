@@ -2,7 +2,7 @@
   "name": "yt-live-sync",
   "version": "1.0.0",
   "scripts": {
-    "build": "webpack",
+    "build": "webpack && zip -r yt-live-sync.zip build/* src/* types/* manifest.json package.json webpack.config.js",
     "watch": "webpack -w"
   },
   "dependencies": {
