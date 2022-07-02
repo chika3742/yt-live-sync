@@ -4,7 +4,7 @@ Firefox向け。YouTubeのライブ配信・プレミア公開の配信時の実
 
 ## ビルド方法
 
-1. `git clone https://github.com/chika3742/yt-live-sync.git`
+1. `git clone https://github.com/chika3742/yt-live-sync.git && cd yt-live-sync`
 2. `yarn install` or `npm install`
 3. `yarn build` or `npm run build` (余計なZipファイルが出来ます)
 
