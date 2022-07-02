@@ -12,7 +12,8 @@ module.exports = {
       {
         test: /\.ts$/,
         use: "ts-loader",
-      }
+        exclude: path.resolve(__dirname, "firebase")
+      },
     ]
   },
   resolve: {

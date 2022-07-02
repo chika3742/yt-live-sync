@@ -1,3 +1,0 @@
-browser.contextMenus.create({
-
-})
