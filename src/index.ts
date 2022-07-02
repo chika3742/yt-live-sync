@@ -32,12 +32,12 @@ async function register() {
   const search = new URLSearchParams(location.search)
   if (search.has("v")) {
     try {
-      const result = await axios.get<GetLiveStreamingDetailsResult>(`http://localhost:5001/yt-live-sync/asia-northeast1/getLiveStreamDetails?v=${search.get("v")}`)
+      const result = await axios.get<GetLiveStreamingDetailsResult>(`https://asia-northeast1-yt-live-sync.cloudfunctions.net/getLiveStreamDetails?v=${search.get("v")}`)
 
+      const player = document.getElementsByClassName("video-stream html5-main-video")[0] as HTMLVideoElement
       if (result.data.exists && result.data.liveStreamingDetails.actualStartTime) {
-        const startTime = result.data.liveStreamingDetails.actualStartTime
 
-        const player = document.getElementsByClassName("video-stream html5-main-video")[0] as HTMLVideoElement
+        const startTime = result.data.liveStreamingDetails.actualStartTime
 
         player.ontimeupdate = () => {
           const actualDate = moment(startTime)
@@ -65,7 +65,8 @@ async function register() {
           subtree: true
         })
       } else {
-        (document.querySelector(".yt-live-sync-actual-time") as HTMLSpanElement).style.display = "none"
+        player.ontimeupdate = null
+        updateDisplay(null)
       }
     } catch (e) {
       console.error(e)
@@ -73,7 +74,7 @@ async function register() {
   }
 }
 
-function updateDisplay(actualDate: Moment) {
+function updateDisplay(actualDate: Moment | null) {
   let span = document.querySelector(".yt-live-sync-actual-time") as HTMLSpanElement | null
   if (!span) {
     const display = document.querySelector(".ytp-time-display")
@@ -81,13 +82,14 @@ function updateDisplay(actualDate: Moment) {
     span.className = "yt-live-sync-actual-time"
     display?.appendChild(span)
   }
-  span.style.display = "unset"
-  span.style.marginLeft = "8px"
-  span.style.opacity = "0.8"
-  span.textContent = `(${actualDate.format("M/D H:mm:ss")})`
-  span.title = actualDate.format("M/D H:mm:ss")
-
-  span.oncontextmenu = (ev) => {
-
+  if (actualDate) {
+    span.style.display = "unset"
+    span.style.marginLeft = "8px"
+    span.style.opacity = "0.8"
+    span.textContent = `(${actualDate.format("M/D H:mm:ss")})`
+    span.title = actualDate.format("M/D H:mm:ss")
+  } else {
+    span.style.display = "none"
   }
+
 }
